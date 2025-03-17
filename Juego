@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijeras</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-color: #f7f7f7;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 150px;
+            height: 150px;
+            font-size: 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            background-color: #077abd;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: #07b0ff;
+        }
+        .result, .stats {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #423c3c;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        .stats {
+            background-color: #3a3a3a;
+        }
+        .reset {
+            margin-top: 20px;
+            background-color: #d9534f;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .reset:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Piedra, Papel o Tijeras</h1>
+    
+    <div class="buttons">
+        <button id="btnPiedra">🪨 Piedra</button>
+        <button id="btnPapel">📄 Papel</button>
+        <button id="btnTijeras">✂️ Tijeras</button>
+    </div>
+    
+    <div class="result" id="resultado">
+        Elige una opción para comenzar.
+    </div>
+    
+    <div class="stats" id="estadisticas">
+        Partidas jugadas: 0 | Victorias: 0 | Derrotas: 0 | Mejor racha: 0
+    </div>
+    
+    <button class="reset" id="btnReset">Reiniciar estadísticas</button>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let victorias = 0;
+            let derrotas = 0;
+            let partidasJugadas = 0;
+            let rachaActual = 0;
+            let mejorRacha = 0;
+
+            const resultadoDiv = document.getElementById("resultado");
+            const estadisticasDiv = document.getElementById("estadisticas");
+            
+            function jugar(eleccionUsuario) {
+                const opciones = ["Piedra", "Papel", "Tijeras"];
+                const eleccionComputadora = opciones[Math.floor(Math.random() * 3)];
+                let resultado = "";
+
+                if (eleccionUsuario === eleccionComputadora) {
+                    resultado = "Empate";
+                    rachaActual = 0;
+                } else if (
+                    (eleccionUsuario === "Piedra" && eleccionComputadora === "Tijeras") ||
+                    (eleccionUsuario === "Papel" && eleccionComputadora === "Piedra") ||
+                    (eleccionUsuario === "Tijeras" && eleccionComputadora === "Papel")
+                ) {
+                    resultado = "¡Ganaste! 🎉";
+                    victorias++;
+                    rachaActual++;
+                    mejorRacha = Math.max(mejorRacha, rachaActual);
+                } else {
+                    resultado = "Perdiste 😢";
+                    derrotas++;
+                    rachaActual = 0;
+                }
+
+                partidasJugadas++;
+
+                resultadoDiv.innerHTML = `
+                    <p><strong>Tú elegiste:</strong> ${eleccionUsuario}</p>
+                    <p><strong>Computadora eligió:</strong> ${eleccionComputadora}</p>
+                    <p><strong>Resultado:</strong> ${resultado}</p>
+                `;
+
+                actualizarEstadisticas();
+            }
+
+            function actualizarEstadisticas() {
+                estadisticasDiv.innerText = 
+                    `Partidas jugadas: ${partidasJugadas} | Victorias: ${victorias} | Derrotas: ${derrotas} | Mejor racha: ${mejorRacha}`;
+            }
+
+            function reiniciarJuego() {
+                victorias = 0;
+                derrotas = 0;
+                partidasJugadas = 0;
+                rachaActual = 0;
+                mejorRacha = 0;
+
+                resultadoDiv.innerText = "Elige una opción para comenzar.";
+                actualizarEstadisticas();
+            }
+
+            // Asignar eventos a los botones
+            document.getElementById("btnPiedra").addEventListener("click", () => jugar("Piedra"));
+            document.getElementById("btnPapel").addEventListener("click", () => jugar("Papel"));
+            document.getElementById("btnTijeras").addEventListener("click", () => jugar("Tijeras"));
+            document.getElementById("btnReset").addEventListener("click", reiniciarJuego);
+        });
+    </script>
+</body>
+</html>.
